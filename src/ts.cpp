@@ -10,6 +10,7 @@ TransitionSystem<size_t, size_t> ReadTransitionSystem(std::istream& is) {
     std::getline(is, line);
     std::istringstream iss(line);
     iss >> num_states >> num_transitions;
+    ts.nodes().reserve(num_states);
     for (size_t i = 0; i < num_states; ++i) {
       ts.nodes().emplace_back(i);
     }

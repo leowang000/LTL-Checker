@@ -14,7 +14,7 @@ class TransitionSystem {
     explicit Node(StateType state) : state_(state) {}
     ~Node() = default;
 
-    StateType state() const { return state_; }
+    const StateType& state() const { return state_; }
 
     const std::unordered_set<Node*>& Successors(ActionType action) const {
       static const std::unordered_set<Node*> empty_set;
@@ -25,9 +25,7 @@ class TransitionSystem {
       return empty_set;
     }
 
-    std::unordered_set<Node*>& Successors(ActionType action) {
-      return transitions_[action];
-    }
+    std::unordered_set<Node*>& Successors(ActionType action) { return transitions_[action]; }
 
     const std::unordered_set<std::string>& label() const { return label_; }
     std::unordered_set<std::string>& label() { return label_; }
@@ -45,21 +43,15 @@ class TransitionSystem {
   std::vector<Node>& nodes() { return nodes_; }
   const std::vector<ActionType>& actions() const { return actions_; }
   std::vector<ActionType>& actions() { return actions_; }
-  const std::vector<Node*>& initial_states() const {
-    return initial_states_;
-  }
-  std::vector<Node*>& initial_states() { return initial_states_; }
-  const std::vector<std::string>& atomic_propositions() const {
-    return atomic_propositions_;
-  }
-  std::vector<std::string>& atomic_propositions() {
-    return atomic_propositions_;
-  }
+  const std::vector<const Node*>& initial_states() const { return initial_states_; }
+  std::vector<const Node*>& initial_states() { return initial_states_; }
+  const std::vector<std::string>& atomic_propositions() const { return atomic_propositions_; }
+  std::vector<std::string>& atomic_propositions() { return atomic_propositions_; }
 
  private:
   std::vector<Node> nodes_;
   std::vector<ActionType> actions_;
-  std::vector<Node*> initial_states_;
+  std::vector<const Node*> initial_states_;
   std::vector<std::string> atomic_propositions_;
 };
 

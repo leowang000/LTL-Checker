@@ -13,10 +13,8 @@ class AST {
 
   const ASTNode* root() const;
   ASTNode* root();
-
   const ASTNode* get_node(size_t id) const;
   ASTNode* get_node(size_t id);
-
   std::string DebugString(size_t indent = 0) const;
 
  private:
