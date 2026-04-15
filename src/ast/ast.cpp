@@ -6,13 +6,9 @@ AST::AST(std::unique_ptr<ASTNode> root) : root_(std::move(root)) {
   }
 }
 
-const ASTNode* AST::root() const {
-  return root_.get();
-}
+const ASTNode* AST::root() const { return root_.get(); }
 
-ASTNode* AST::root() {
-  return root_.get();
-}
+ASTNode* AST::root() { return root_.get(); }
 
 const ASTNode* AST::get_node(size_t id) const {
   if (id < id_to_node_.size()) {
@@ -26,6 +22,10 @@ ASTNode* AST::get_node(size_t id) {
     return id_to_node_[id];
   }
   return nullptr;
+}
+
+std::string AST::DebugString(size_t indent) const {
+  return root_ ? root_->DebugString(indent) : "Empty AST";
 }
 
 void AST::AssignIdsAndBuildMap(ASTNode* node) {

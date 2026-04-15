@@ -1,6 +1,17 @@
-#include "ast/ast_builder.h"
-
 #include <utility>
+
+#include "ast/ast_builder.h"
+#include "LTLLexer.h"
+#include "LTLParser.h"
+
+AST ASTBuilder::Build(std::string_view input) {
+  antlr4::ANTLRInputStream stream(input);
+  LTLLexer lexer(&stream);
+  antlr4::CommonTokenStream tokens(&lexer);
+  LTLParser parser(&tokens);
+  auto tree = parser.formula();
+  return Build(tree);
+}
 
 AST ASTBuilder::Build(LTLParser::FormulaContext* root) {
   return AST(VisitNode(root));
@@ -44,7 +55,7 @@ std::unique_ptr<ASTNode> ASTBuilder::VisitParen(LTLParser::ParenContext* ctx) {
 std::unique_ptr<ASTNode> ASTBuilder::VisitNot(LTLParser::NotContext* ctx) {
   auto child = VisitNode(ctx->formula());
   if (child) {
-    child->negate();
+    child->Negate();
   }
   return child;
 }
@@ -57,11 +68,11 @@ std::unique_ptr<ASTNode> ASTBuilder::VisitAlways(
     LTLParser::AlwaysContext* ctx) {
   auto phi = VisitNode(ctx->formula());
   if (phi) {
-    phi->negate();
+    phi->Negate();
   }
   auto until_node = std::make_unique<UntilASTNode>(
       std::make_unique<TrueASTNode>(), std::move(phi));
-  until_node->negate();
+  until_node->Negate();
   return until_node;
 }
 
@@ -79,15 +90,15 @@ std::unique_ptr<ASTNode> ASTBuilder::VisitAnd(LTLParser::AndContext* ctx) {
 std::unique_ptr<ASTNode> ASTBuilder::VisitOr(LTLParser::OrContext* ctx) {
   auto left = VisitNode(ctx->formula(0));
   if (left) {
-    left->negate();
+    left->Negate();
   }
   auto right = VisitNode(ctx->formula(1));
   if (right) {
-    right->negate();
+    right->Negate();
   }
   auto and_node =
       std::make_unique<AndASTNode>(std::move(left), std::move(right));
-  and_node->negate();
+  and_node->Negate();
   return and_node;
 }
 
@@ -96,11 +107,11 @@ std::unique_ptr<ASTNode> ASTBuilder::VisitImplies(
   auto left = VisitNode(ctx->formula(0));
   auto right = VisitNode(ctx->formula(1));
   if (right) {
-    right->negate();
+    right->Negate();
   }
   auto and_node =
       std::make_unique<AndASTNode>(std::move(left), std::move(right));
-  and_node->negate();
+  and_node->Negate();
   return and_node;
 }
 
@@ -117,7 +128,7 @@ std::unique_ptr<ASTNode> ASTBuilder::VisitTrueLit(
 std::unique_ptr<ASTNode> ASTBuilder::VisitFalseLit(
     LTLParser::FalseLitContext* ctx) {
   auto true_node = std::make_unique<TrueASTNode>();
-  true_node->negate();
+  true_node->Negate();
   return true_node;
 }
 

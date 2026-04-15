@@ -8,11 +8,16 @@ class ASTNode {
   explicit ASTNode(bool is_negated = false);
   virtual ~ASTNode() = default;
 
+  virtual std::string DebugString(size_t indent) const = 0;
+
   bool is_negated() const;
   void set_negated(bool is_negated);
-  void negate();
+  void Negate();
   size_t id() const;
   void set_id(size_t id);
+
+ protected:
+  std::string NegatedString() const;
 
  private:
   bool is_negated_;
@@ -23,6 +28,8 @@ class NextASTNode : public ASTNode {
  public:
   explicit NextASTNode(std::unique_ptr<ASTNode> child, bool is_negated = false);
   ~NextASTNode() override = default;
+
+  std::string DebugString(size_t indent) const override;
 
   const ASTNode* child() const;
   ASTNode* child();
@@ -36,6 +43,8 @@ class AndASTNode : public ASTNode {
   AndASTNode(std::unique_ptr<ASTNode> left, std::unique_ptr<ASTNode> right,
              bool is_negated = false);
   ~AndASTNode() override = default;
+
+  std::string DebugString(size_t indent) const override;
 
   const ASTNode* left() const;
   ASTNode* left();
@@ -53,6 +62,8 @@ class UntilASTNode : public ASTNode {
                bool is_negated = false);
   ~UntilASTNode() override = default;
 
+  std::string DebugString(size_t indent) const override;
+
   const ASTNode* left() const;
   ASTNode* left();
   const ASTNode* right() const;
@@ -68,6 +79,8 @@ class AtomASTNode : public ASTNode {
   explicit AtomASTNode(std::string proposition, bool is_negated = false);
   ~AtomASTNode() override = default;
 
+  std::string DebugString(size_t indent) const override;
+
   const std::string Proposition() const;
 
  private:
@@ -78,6 +91,8 @@ class TrueASTNode : public ASTNode {
  public:
   explicit TrueASTNode(bool is_negated = false);
   ~TrueASTNode() override = default;
+
+  std::string DebugString(size_t indent) const override;
 };
 
 #endif  // LTL_CHECKER_AST_NODE_H

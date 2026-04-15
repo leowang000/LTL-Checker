@@ -12,9 +12,10 @@ class ASTBuilder {
   ASTBuilder() = default;
   ~ASTBuilder() = default;
 
-  static AST Build(LTLParser::FormulaContext* root);
+  static AST Build(std::string_view input);
 
  private:
+  static AST Build(LTLParser::FormulaContext* root);
   static std::unique_ptr<ASTNode> VisitNode(LTLParser::FormulaContext* ctx);
   static std::unique_ptr<ASTNode> VisitParen(LTLParser::ParenContext* ctx);
   static std::unique_ptr<ASTNode> VisitNot(LTLParser::NotContext* ctx);
