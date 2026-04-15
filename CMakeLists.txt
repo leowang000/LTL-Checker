@@ -8,7 +8,8 @@ add_executable(LTL_checker main.cpp
         grammar/LTLParser.cpp
         src/ast/ast_node.cpp
         src/ast/ast.cpp
-        src/ast/ast_builder.cpp)
+        src/ast/ast_builder.cpp
+        src/ts.cpp)
 
 target_include_directories(LTL_checker PRIVATE
         ${CMAKE_SOURCE_DIR}/grammar

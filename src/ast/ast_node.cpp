@@ -4,16 +4,15 @@
 
 #include <utility>
 
-ASTNode::ASTNode(bool is_negated) : is_negated_(is_negated), id_() {}
+ASTNode::ASTNode(bool is_negated, ASTNode* parent)
+    : parent_(parent), is_negated_(is_negated), id_() {}
 
+ASTNode* ASTNode::parent() const { return parent_; }
+void ASTNode::set_parent(ASTNode* parent) { parent_ = parent; }
 bool ASTNode::is_negated() const { return is_negated_; }
-
 void ASTNode::set_negated(bool is_negated) { is_negated_ = is_negated; }
-
 void ASTNode::Negate() { is_negated_ = !is_negated_; }
-
 size_t ASTNode::id() const { return id_; }
-
 void ASTNode::set_id(size_t id) { id_ = id; }
 
 std::string ASTNode::NegatedString() const {
@@ -21,7 +20,9 @@ std::string ASTNode::NegatedString() const {
 }
 
 NextASTNode::NextASTNode(std::unique_ptr<ASTNode> child, bool is_negated)
-    : ASTNode(is_negated), child_(std::move(child)) {}
+    : ASTNode(is_negated), child_(std::move(child)) {
+  child_->set_parent(this);
+}
 
 std::string NextASTNode::DebugString(size_t indent) const {
   return fmt::format("{}Next{}\n{}", std::string(indent, ' '), NegatedString(),
@@ -33,7 +34,10 @@ ASTNode* NextASTNode::child() { return child_.get(); }
 
 AndASTNode::AndASTNode(std::unique_ptr<ASTNode> left,
                        std::unique_ptr<ASTNode> right, bool is_negated)
-    : ASTNode(is_negated), left_(std::move(left)), right_(std::move(right)) {}
+    : ASTNode(is_negated), left_(std::move(left)), right_(std::move(right)) {
+  left_->set_parent(this);
+  right_->set_parent(this);
+}
 
 std::string AndASTNode::DebugString(size_t indent) const {
   return fmt::format("{}And{}\n{}\n{}", std::string(indent, ' '),
@@ -48,7 +52,10 @@ ASTNode* AndASTNode::right() { return right_.get(); }
 
 UntilASTNode::UntilASTNode(std::unique_ptr<ASTNode> left,
                            std::unique_ptr<ASTNode> right, bool is_negated)
-    : ASTNode(is_negated), left_(std::move(left)), right_(std::move(right)) {}
+    : ASTNode(is_negated), left_(std::move(left)), right_(std::move(right)) {
+  left_->set_parent(this);
+  right_->set_parent(this);
+}
 
 std::string UntilASTNode::DebugString(size_t indent) const {
   return fmt::format("{}Until{}\n{}\n{}", std::string(indent, ' '),

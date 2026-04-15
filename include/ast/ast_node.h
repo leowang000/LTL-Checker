@@ -5,11 +5,13 @@
 
 class ASTNode {
  public:
-  explicit ASTNode(bool is_negated = false);
+  explicit ASTNode(bool is_negated = false, ASTNode* parent = nullptr);
   virtual ~ASTNode() = default;
 
   virtual std::string DebugString(size_t indent) const = 0;
 
+  ASTNode* parent() const;
+  void set_parent(ASTNode* parent);
   bool is_negated() const;
   void set_negated(bool is_negated);
   void Negate();
@@ -21,7 +23,8 @@ class ASTNode {
 
  private:
   bool is_negated_;
-  size_t id_{};
+  ASTNode* parent_;
+  size_t id_;
 };
 
 class NextASTNode : public ASTNode {
