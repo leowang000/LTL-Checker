@@ -24,6 +24,8 @@ ASTNode* AST::get_node(size_t id) {
   return nullptr;
 }
 
+size_t AST::Size() const { return id_to_node_.size(); }
+
 std::string AST::DebugString(size_t indent) const {
   return root_ ? root_->DebugString(indent) : "Empty AST";
 }

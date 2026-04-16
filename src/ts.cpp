@@ -2,11 +2,11 @@
 
 #include <sstream>
 
-TransitionSystem<size_t, size_t, std::string> ReadTransitionSystem(std::istream& is) {
+TransitionSystem<size_t, size_t, std::string> ReadTransitionSystem(
+    std::istream& is, std::vector<std::string>& atomic_propositions) {
   TransitionSystem<size_t, size_t, std::string> ts;
   std::string line;
   size_t num_states, num_transitions;
-  std::vector<std::string> atomic_propositions;
   {
     std::getline(is, line);
     std::istringstream iss(line);

@@ -71,7 +71,7 @@ std::string AtomASTNode::DebugString(size_t indent) const {
   return fmt::format("{}Atom({}){}", std::string(indent, ' '), proposition_, NegatedString());
 }
 
-const std::string AtomASTNode::Proposition() const { return proposition_; }
+std::string AtomASTNode::proposition() const { return proposition_; }
 
 TrueASTNode::TrueASTNode(bool is_negated) : ASTNode(is_negated) {}
 

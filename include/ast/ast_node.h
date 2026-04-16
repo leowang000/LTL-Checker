@@ -43,7 +43,8 @@ class NextASTNode : public ASTNode {
 
 class AndASTNode : public ASTNode {
  public:
-  AndASTNode(std::unique_ptr<ASTNode> left, std::unique_ptr<ASTNode> right, bool is_negated = false);
+  AndASTNode(std::unique_ptr<ASTNode> left, std::unique_ptr<ASTNode> right,
+             bool is_negated = false);
   ~AndASTNode() override = default;
 
   std::string DebugString(size_t indent) const override;
@@ -60,7 +61,8 @@ class AndASTNode : public ASTNode {
 
 class UntilASTNode : public ASTNode {
  public:
-  UntilASTNode(std::unique_ptr<ASTNode> left, std::unique_ptr<ASTNode> right, bool is_negated = false);
+  UntilASTNode(std::unique_ptr<ASTNode> left, std::unique_ptr<ASTNode> right,
+               bool is_negated = false);
   ~UntilASTNode() override = default;
 
   std::string DebugString(size_t indent) const override;
@@ -82,7 +84,7 @@ class AtomASTNode : public ASTNode {
 
   std::string DebugString(size_t indent) const override;
 
-  const std::string Proposition() const;
+  std::string proposition() const;
 
  private:
   std::string proposition_;

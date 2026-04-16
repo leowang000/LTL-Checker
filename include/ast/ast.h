@@ -15,6 +15,7 @@ class AST {
   ASTNode* root();
   const ASTNode* get_node(size_t id) const;
   ASTNode* get_node(size_t id);
+  size_t Size() const;
   std::string DebugString(size_t indent = 0) const;
 
  private:

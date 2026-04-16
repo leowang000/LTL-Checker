@@ -52,6 +52,7 @@ class TransitionSystem {
   std::vector<const Node*> initial_states_;
 };
 
-TransitionSystem<size_t, size_t, std::string> ReadTransitionSystem(std::istream& is);
+TransitionSystem<size_t, size_t, std::string> ReadTransitionSystem(
+    std::istream& is, std::vector<std::string>& atomic_propositions);
 
 #endif  // LTL_CHECKER_TS_H
