@@ -6,7 +6,7 @@
 #include <unordered_set>
 #include <vector>
 
-template <typename StateType, typename ActionType>
+template <typename StateType, typename ActionType, typename APType>
 class TransitionSystem {
  public:
   class Node {
@@ -27,13 +27,13 @@ class TransitionSystem {
 
     std::unordered_set<Node*>& Successors(ActionType action) { return transitions_[action]; }
 
-    const std::unordered_set<std::string>& label() const { return label_; }
-    std::unordered_set<std::string>& label() { return label_; }
+    const std::unordered_set<APType>& label() const { return label_; }
+    std::unordered_set<APType>& label() { return label_; }
 
    private:
     StateType state_;
     std::unordered_map<ActionType, std::unordered_set<Node*>> transitions_;
-    std::unordered_set<std::string> label_;
+    std::unordered_set<APType> label_;
   };
 
   TransitionSystem() = default;
@@ -45,16 +45,13 @@ class TransitionSystem {
   std::vector<ActionType>& actions() { return actions_; }
   const std::vector<const Node*>& initial_states() const { return initial_states_; }
   std::vector<const Node*>& initial_states() { return initial_states_; }
-  const std::vector<std::string>& atomic_propositions() const { return atomic_propositions_; }
-  std::vector<std::string>& atomic_propositions() { return atomic_propositions_; }
 
  private:
   std::vector<Node> nodes_;
   std::vector<ActionType> actions_;
   std::vector<const Node*> initial_states_;
-  std::vector<std::string> atomic_propositions_;
 };
 
-TransitionSystem<size_t, size_t> ReadTransitionSystem(std::istream& is);
+TransitionSystem<size_t, size_t, std::string> ReadTransitionSystem(std::istream& is);
 
 #endif  // LTL_CHECKER_TS_H
