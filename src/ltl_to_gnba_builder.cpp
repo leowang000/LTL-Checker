@@ -90,7 +90,7 @@ GNBA<boost::dynamic_bitset<>> LTLToGNBABuilder::Build(
 
   // Step 3: Construct the initial sets.
   for (const auto& gnba_node : gnba.nodes()) {
-    if (gnba_node.state()[ast.root()->id()] == ast.root()->is_negated()) {
+    if (gnba_node.state()[ast.root()->id()] == !ast.root()->is_negated()) {
       gnba.initial_states().push_back(&gnba_node);
     }
   }

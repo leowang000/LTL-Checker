@@ -1,5 +1,6 @@
 #include "ast/ast_builder.h"
 
+#include <sstream>
 #include <utility>
 
 #include "LTLLexer.h"
@@ -126,15 +127,19 @@ std::vector<std::pair<int, AST>> ReadLTLInputFile(std::istream& input) {
   std::vector<std::pair<int, AST>> ltls;
   int num_all_initial_states, num_specified_initial_states;
   input >> num_all_initial_states >> num_specified_initial_states;
+  std::string line;
+  getline(input, line);
   for (int i = 0; i < num_all_initial_states; i++) {
-    std::string ltl;
-    input >> ltl;
-    ltls.emplace_back(-1, ASTBuilder::Build(ltl));
+    getline(input, line);
+    ltls.emplace_back(-1, ASTBuilder::Build(line));
   }
   for (int i = 0; i < num_specified_initial_states; i++) {
+    getline(input, line);
+    std::istringstream iss(line);
     int initial_state;
     std::string ltl;
-    input >> initial_state >> ltl;
+    iss >> initial_state;
+    getline(iss, ltl);
     ltls.emplace_back(initial_state, ASTBuilder::Build(ltl));
   }
   return ltls;

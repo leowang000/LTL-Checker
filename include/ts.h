@@ -16,8 +16,8 @@ class TransitionSystem {
 
     const StateType& state() const { return state_; }
 
-    const std::unordered_set<Node*>& Successors(ActionType action) const {
-      static const std::unordered_set<Node*> empty_set;
+    const std::unordered_set<const Node*>& Successors(ActionType action) const {
+      static const std::unordered_set<const Node*> empty_set;
       auto it = transitions_.find(action);
       if (it != transitions_.end()) {
         return it->second;
@@ -25,14 +25,14 @@ class TransitionSystem {
       return empty_set;
     }
 
-    std::unordered_set<Node*>& Successors(ActionType action) { return transitions_[action]; }
+    std::unordered_set<const Node*>& Successors(ActionType action) { return transitions_[action]; }
 
     const std::unordered_set<APType>& label() const { return label_; }
     std::unordered_set<APType>& label() { return label_; }
 
    private:
     StateType state_;
-    std::unordered_map<ActionType, std::unordered_set<Node*>> transitions_;
+    std::unordered_map<ActionType, std::unordered_set<const Node*>> transitions_;
     std::unordered_set<APType> label_;
   };
 

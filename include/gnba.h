@@ -26,13 +26,17 @@ class GNBA {
     std::unordered_set<Node*> successors_;
   };
 
-  struct AcceptanceState {
+  struct TaggedState {
     StateType state_;
     size_t acceptance_id_;
   };
 
   GNBA() = default;
   ~GNBA() = default;
+  GNBA(GNBA&&) noexcept = default;
+  GNBA& operator=(GNBA&&) noexcept = default;
+  GNBA(const GNBA&) = delete;
+  GNBA& operator=(const GNBA&) = delete;
 
   const std::vector<Node>& nodes() const { return nodes_; }
   std::vector<Node>& nodes() { return nodes_; }
@@ -53,9 +57,9 @@ class GNBA {
     }
   }
 
-  GNBA<AcceptanceState> ToNBA() const {
+  GNBA<TaggedState> ToNBA() const {
     // Require that acceptance_sets_ is not empty.
-    GNBA<AcceptanceState> nba;
+    GNBA<TaggedState> nba;
     size_t k = acceptance_sets_.size();
 
     auto get_gnba_node_id = [this](const Node* node) -> size_t { return node - nodes_.data(); };
@@ -69,7 +73,7 @@ class GNBA {
     for (size_t j = 0; j < k; ++j) {
       for (size_t i = 0; i < nodes_.size(); ++i) {
         nba.nodes().emplace_back(
-            typename GNBA<AcceptanceState>::Node(AcceptanceState{nodes_[i].state(), j}));
+            typename GNBA<TaggedState>::Node(TaggedState{nodes_[i].state(), j}));
         nba.nodes().back().label() = nodes_[i].label();
       }
     }
@@ -81,7 +85,7 @@ class GNBA {
     }
 
     // Set acceptance state F' = F_0 x {0}
-    std::unordered_set<const typename GNBA<AcceptanceState>::Node*> nba_acceptance_set;
+    std::unordered_set<const typename GNBA<TaggedState>::Node*> nba_acceptance_set;
     for (const auto* f0_node : acceptance_sets_[0]) {
       nba_acceptance_set.insert(&nba.nodes()[get_nba_node_id(get_gnba_node_id(f0_node), 0)]);
     }
