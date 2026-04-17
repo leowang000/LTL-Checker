@@ -9,12 +9,38 @@
 #include "product_ts_constructor.h"
 #include "ts.h"
 
-int main() {
-  std::ifstream ts_input_file("../benchmark/1.ts.in");
-  std::ifstream ltl_input_file("../benchmark/1.ltl.in");
+int main(int argc, char* argv[]) {
+  if (argc != 2) {
+    std::cerr << "Usage: " << argv[0] << " <benchmark_prefix>" << std::endl;
+    return 1;
+  }
+  std::string prefix = argv[1];
+
+  std::string ts_file = "benchmark/" + prefix + ".ts.in";
+  std::string ltl_file = "benchmark/" + prefix + ".ltl.in";
+
+  std::ifstream ts_input_file(ts_file);
+  std::ifstream ltl_input_file(ltl_file);
+
+  if (!ts_input_file.is_open()) {
+    ts_file = "../benchmark/" + prefix + ".ts.in";
+    ltl_file = "../benchmark/" + prefix + ".ltl.in";
+    ts_input_file.open(ts_file);
+    ltl_input_file.open(ltl_file);
+  }
+
+  if (!ts_input_file.is_open()) {
+    std::cerr << "Failed to open TS input file: " << ts_file << std::endl;
+    return 1;
+  }
+  if (!ltl_input_file.is_open()) {
+    std::cerr << "Failed to open LTL input file: " << ltl_file << std::endl;
+    return 1;
+  }
+
   auto [ts, atomic_propositions] = ReadTransitionSystemInput(ts_input_file);
   auto ltls = ReadLTLInputFile(ltl_input_file);
-  for (auto &[initial_state, ast] : ltls) {
+  for (auto& [initial_state, ast] : ltls) {
     ast.root()->Negate();
     auto gnba = LTLToGNBABuilder::Build(ast, atomic_propositions);
     auto nba = gnba.ToNBA();
