@@ -1,3 +1,0 @@
-/mnt/d/1-undergraduate/3rd-year/2nd-semester/curriculum/model-checking/LTL-checker/build/CMakeFiles/LTL_checker.dir
-/mnt/d/1-undergraduate/3rd-year/2nd-semester/curriculum/model-checking/LTL-checker/build/CMakeFiles/edit_cache.dir
-/mnt/d/1-undergraduate/3rd-year/2nd-semester/curriculum/model-checking/LTL-checker/build/CMakeFiles/rebuild_cache.dir

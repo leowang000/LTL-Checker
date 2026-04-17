@@ -34,5 +34,6 @@ done
 
 # Clean up
 rm -f tmp.out
+rm -rf build
 echo "=================================="
 echo "All tests completed."
