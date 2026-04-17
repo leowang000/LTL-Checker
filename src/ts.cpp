@@ -2,13 +2,14 @@
 
 #include <sstream>
 
-TransitionSystem<size_t, size_t, std::string> ReadTransitionSystem(
-    std::istream& is, std::vector<std::string>& atomic_propositions) {
+std::pair<TransitionSystem<size_t, size_t, std::string>, std::vector<std::string>>
+ReadTransitionSystemInput(std::istream& input) {
   TransitionSystem<size_t, size_t, std::string> ts;
+  std::vector<std::string> atomic_propositions;
   std::string line;
   size_t num_states, num_transitions;
   {
-    std::getline(is, line);
+    std::getline(input, line);
     std::istringstream iss(line);
     iss >> num_states >> num_transitions;
     ts.nodes().reserve(num_states);
@@ -17,7 +18,7 @@ TransitionSystem<size_t, size_t, std::string> ReadTransitionSystem(
     }
   }
   {
-    std::getline(is, line);
+    std::getline(input, line);
     std::istringstream iss(line);
     size_t initial_state;
     while (iss >> initial_state) {
@@ -25,7 +26,7 @@ TransitionSystem<size_t, size_t, std::string> ReadTransitionSystem(
     }
   }
   {
-    std::getline(is, line);
+    std::getline(input, line);
     std::istringstream iss(line);
     size_t action;
     while (iss >> action) {
@@ -33,7 +34,7 @@ TransitionSystem<size_t, size_t, std::string> ReadTransitionSystem(
     }
   }
   {
-    std::getline(is, line);
+    std::getline(input, line);
     std::istringstream iss(line);
     std::string ap;
     while (iss >> ap) {
@@ -42,7 +43,7 @@ TransitionSystem<size_t, size_t, std::string> ReadTransitionSystem(
   }
   {
     for (size_t i = 0; i < num_transitions; ++i) {
-      getline(is, line);
+      getline(input, line);
       std::istringstream iss(line);
       size_t from, to, action;
       iss >> from >> action >> to;
@@ -51,7 +52,7 @@ TransitionSystem<size_t, size_t, std::string> ReadTransitionSystem(
   }
   {
     for (size_t i = 0; i < num_states; ++i) {
-      getline(is, line);
+      getline(input, line);
       std::istringstream iss(line);
       size_t ap_id;
       while (iss >> ap_id) {
@@ -59,5 +60,5 @@ TransitionSystem<size_t, size_t, std::string> ReadTransitionSystem(
       }
     }
   }
-  return ts;
+  return {std::move(ts), std::move(atomic_propositions)};
 }

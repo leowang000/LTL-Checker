@@ -38,6 +38,10 @@ class TransitionSystem {
 
   TransitionSystem() = default;
   ~TransitionSystem() = default;
+  TransitionSystem(TransitionSystem&&) noexcept = default;
+  TransitionSystem& operator=(TransitionSystem&&) noexcept = default;
+  TransitionSystem(const TransitionSystem&) = delete;
+  TransitionSystem& operator=(const TransitionSystem&) = delete;
 
   const std::vector<Node>& nodes() const { return nodes_; }
   std::vector<Node>& nodes() { return nodes_; }
@@ -52,7 +56,7 @@ class TransitionSystem {
   std::vector<const Node*> initial_states_;
 };
 
-TransitionSystem<size_t, size_t, std::string> ReadTransitionSystem(
-    std::istream& is, std::vector<std::string>& atomic_propositions);
+std::pair<TransitionSystem<size_t, size_t, std::string>, std::vector<std::string>>
+ReadTransitionSystemInput(std::istream& input);
 
 #endif  // LTL_CHECKER_TS_H

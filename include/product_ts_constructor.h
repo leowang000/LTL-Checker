@@ -6,8 +6,8 @@
 class ProductTSConstructor {
  public:
   template <typename TSStateType, typename ActionType, typename NBAStateType>
-  static auto Product(const TransitionSystem<TSStateType, ActionType, std::string>& ts,
-                      const GNBA<NBAStateType>& nba, int ts_initial_state_id = -1)
+  static auto Build(const TransitionSystem<TSStateType, ActionType, std::string>& ts,
+                    const GNBA<NBAStateType>& nba, int ts_initial_state_id)
       -> TransitionSystem<std::pair<TSStateType, NBAStateType>, ActionType,
                           const typename GNBA<NBAStateType>::Node*> {
     // Require that nba is indeed an NBA.

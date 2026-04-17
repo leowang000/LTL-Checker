@@ -10,12 +10,15 @@ class AST {
  public:
   explicit AST(std::unique_ptr<ASTNode> root);
   ~AST() = default;
+  AST(AST&&) noexcept = default;
+  AST& operator=(AST&&) noexcept = default;
+  AST(const AST&) = delete;
+  AST& operator=(const AST&) = delete;
 
   const ASTNode* root() const;
   ASTNode* root();
-  const ASTNode* get_node(size_t id) const;
-  ASTNode* get_node(size_t id);
-  size_t Size() const;
+  const std::vector<ASTNode*>& id_to_node() const;
+  std::vector<ASTNode*>& id_to_node();
   std::string DebugString(size_t indent = 0) const;
 
  private:

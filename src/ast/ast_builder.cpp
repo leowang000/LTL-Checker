@@ -121,3 +121,21 @@ std::unique_ptr<ASTNode> ASTBuilder::VisitFalseLit(LTLParser::FalseLitContext* c
 std::unique_ptr<ASTNode> ASTBuilder::VisitAtomExpr(LTLParser::AtomExprContext* ctx) {
   return std::make_unique<AtomASTNode>(ctx->ATOM()->getText());
 }
+
+std::vector<std::pair<int, AST>> ReadLTLInputFile(std::istream& input) {
+  std::vector<std::pair<int, AST>> ltls;
+  int num_all_initial_states, num_specified_initial_states;
+  input >> num_all_initial_states >> num_specified_initial_states;
+  for (int i = 0; i < num_all_initial_states; i++) {
+    std::string ltl;
+    input >> ltl;
+    ltls.emplace_back(-1, ASTBuilder::Build(ltl));
+  }
+  for (int i = 0; i < num_specified_initial_states; i++) {
+    int initial_state;
+    std::string ltl;
+    input >> initial_state >> ltl;
+    ltls.emplace_back(initial_state, ASTBuilder::Build(ltl));
+  }
+  return ltls;
+}

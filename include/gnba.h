@@ -38,16 +38,18 @@ class GNBA {
   std::vector<Node>& nodes() { return nodes_; }
   const std::vector<const Node*>& initial_states() const { return initial_states_; }
   std::vector<const Node*>& initial_states() { return initial_states_; }
-  const std::vector<std::set<const Node*>>& acceptance_sets() const { return acceptance_sets_; }
-  std::vector<std::set<const Node*>>& acceptance_sets() { return acceptance_sets_; }
+  const std::vector<std::unordered_set<const Node*>>& acceptance_sets() const {
+    return acceptance_sets_;
+  }
+  std::vector<std::unordered_set<const Node*>>& acceptance_sets() { return acceptance_sets_; }
 
   void EnsureDefaultAcceptanceSet() {
     if (acceptance_sets_.empty()) {
-      std::set<Node*> all_nodes;
+      std::unordered_set<const Node*> all_nodes;
       for (size_t i = 0; i < nodes_.size(); ++i) {
         all_nodes.insert(&nodes_[i]);
       }
-      acceptance_sets_.emplace_back(all_nodes);
+      acceptance_sets_.push_back(std::move(all_nodes));
     }
   }
 
@@ -63,35 +65,35 @@ class GNBA {
     };
 
     // Create states Q' = Q x {0, 1, ..., k-1}
-    nba.nodes_.reserve(nodes_.size() * k);
+    nba.nodes().reserve(nodes_.size() * k);
     for (size_t j = 0; j < k; ++j) {
       for (size_t i = 0; i < nodes_.size(); ++i) {
-        nba.nodes_.emplace_back(
+        nba.nodes().emplace_back(
             typename GNBA<AcceptanceState>::Node(AcceptanceState{nodes_[i].state(), j}));
-        nba.nodes_.back().label() = nodes_[i].label();
+        nba.nodes().back().label() = nodes_[i].label();
       }
     }
 
     // Set initial states Q'_0 = Q_0 x {0}
     for (const auto* initial_state : initial_states_) {
-      nba.initial_states_.push_back(
-          &nba.nodes_[get_nba_node_id(get_gnba_node_id(initial_state), 0)]);
+      nba.initial_states().push_back(
+          &nba.nodes()[get_nba_node_id(get_gnba_node_id(initial_state), 0)]);
     }
 
     // Set acceptance state F' = F_0 x {0}
-    std::set<const typename GNBA<AcceptanceState>::Node*> nba_acceptance_set;
+    std::unordered_set<const typename GNBA<AcceptanceState>::Node*> nba_acceptance_set;
     for (const auto* f0_node : acceptance_sets_[0]) {
-      nba_acceptance_set.insert(&nba.nodes_[get_nba_node_id(get_gnba_node_id(f0_node), 0)]);
+      nba_acceptance_set.insert(&nba.nodes()[get_nba_node_id(get_gnba_node_id(f0_node), 0)]);
     }
-    nba.acceptance_sets_.push_back(nba_acceptance_set);
+    nba.acceptance_sets().push_back(nba_acceptance_set);
 
     // Add transitions
     for (size_t j = 0; j < k; ++j) {
       for (size_t i = 0; i < nodes_.size(); ++i) {
         size_t next_acceptance_id = acceptance_sets_[j].count(&nodes_[i]) > 0 ? (j + 1) % k : j;
         for (const auto* successor : nodes_[i].successors()) {
-          nba.nodes_[get_nba_node_id(i, j)].successors().insert(
-              &nba.nodes_[get_nba_node_id(get_gnba_node_id(successor), next_acceptance_id)]);
+          nba.nodes()[get_nba_node_id(i, j)].successors().insert(
+              &nba.nodes()[get_nba_node_id(get_gnba_node_id(successor), next_acceptance_id)]);
         }
       }
     }
@@ -102,7 +104,7 @@ class GNBA {
  private:
   std::vector<Node> nodes_;
   std::vector<const Node*> initial_states_;
-  std::vector<std::set<const Node*>> acceptance_sets_;
+  std::vector<std::unordered_set<const Node*>> acceptance_sets_;
 };
 
 #endif  // LTL_CHECKER_GNBA_H

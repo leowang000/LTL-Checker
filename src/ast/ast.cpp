@@ -7,24 +7,9 @@ AST::AST(std::unique_ptr<ASTNode> root) : root_(std::move(root)) {
 }
 
 const ASTNode* AST::root() const { return root_.get(); }
-
 ASTNode* AST::root() { return root_.get(); }
-
-const ASTNode* AST::get_node(size_t id) const {
-  if (id < id_to_node_.size()) {
-    return id_to_node_[id];
-  }
-  return nullptr;
-}
-
-ASTNode* AST::get_node(size_t id) {
-  if (id < id_to_node_.size()) {
-    return id_to_node_[id];
-  }
-  return nullptr;
-}
-
-size_t AST::Size() const { return id_to_node_.size(); }
+const std::vector<ASTNode*>& AST::id_to_node() const { return id_to_node_; }
+std::vector<ASTNode*>& AST::id_to_node() { return id_to_node_; }
 
 std::string AST::DebugString(size_t indent) const {
   return root_ ? root_->DebugString(indent) : "Empty AST";

@@ -1,7 +1,9 @@
 #ifndef LTL_CHECKER_AST_BUILDER_H
 #define LTL_CHECKER_AST_BUILDER_H
 
+#include <iostream>
 #include <memory>
+#include <vector>
 
 #include "LTLParser.h"
 #include "ast/ast.h"
@@ -30,5 +32,7 @@ class ASTBuilder {
   static std::unique_ptr<ASTNode> VisitFalseLit(LTLParser::FalseLitContext* ctx);
   static std::unique_ptr<ASTNode> VisitAtomExpr(LTLParser::AtomExprContext* ctx);
 };
+
+std::vector<std::pair<int, AST>> ReadLTLInputFile(std::istream& input);
 
 #endif  // LTL_CHECKER_AST_BUILDER_H
