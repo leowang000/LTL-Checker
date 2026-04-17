@@ -43,46 +43,40 @@ GNBA<boost::dynamic_bitset<>> LTLToGNBABuilder::Build(
 
   // Step 2: For each node, construct its successors.
   for (auto& current_gnba_node : gnba.nodes()) {
-    for (auto& next_gnba_node : gnba.nodes()) {
-      bool valid = true;
-      const auto& current_set = current_gnba_node.state();
-      const auto& next_set = next_gnba_node.state();
+    const auto& current_set = current_gnba_node.state();
+    boost::dynamic_bitset<> required_next_set(ast.id_to_node().size());
+    boost::dynamic_bitset<> mask(ast.id_to_node().size());
 
-      for (const auto* ast_node : ast.id_to_node()) {
-        if (auto* next_node = dynamic_cast<const NextASTNode*>(ast_node)) {
-          bool current_val = current_set[next_node->id()];
-          bool next_val = next_set[next_node->child()->id()];
-          if (next_node->child()->is_negated()) {
-            next_val = !next_val;
-          }
-          if (current_val != next_val) {
-            valid = false;
-            break;
-          }
-        } else if (auto* until_node = dynamic_cast<const UntilASTNode*>(ast_node)) {
-          bool current_u = current_set[until_node->id()];
-          bool current_left = current_set[until_node->left()->id()];
-          if (until_node->left()->is_negated()) {
-            current_left = !current_left;
-          }
-          bool current_right = current_set[until_node->right()->id()];
-          if (until_node->right()->is_negated()) {
-            current_right = !current_right;
-          }
-          bool next_u = next_set[until_node->id()];
+    for (const auto* ast_node : ast.id_to_node()) {
+      if (auto* next_node = dynamic_cast<const NextASTNode*>(ast_node)) {
+        bool current_val = current_set[next_node->id()];
+        size_t next_child_id = next_node->child()->id();
+        mask[next_child_id] = true;
+        required_next_set[next_child_id] =
+            next_node->child()->is_negated() ? !current_val : current_val;
+      } else if (auto* until_node = dynamic_cast<const UntilASTNode*>(ast_node)) {
+        bool current_u = current_set[until_node->id()];
+        bool current_left = current_set[until_node->left()->id()];
+        if (until_node->left()->is_negated()) {
+          current_left = !current_left;
+        }
+        bool current_right = current_set[until_node->right()->id()];
+        if (until_node->right()->is_negated()) {
+          current_right = !current_right;
+        }
 
-          if (current_u && !current_right && !next_u) {
-            valid = false;
-            break;
-          }
-          if (!current_u && current_left && next_u) {
-            valid = false;
-            break;
-          }
+        if (current_u && !current_right) {
+          mask[until_node->id()] = true;
+          required_next_set[until_node->id()] = true;
+        } else if (!current_u && current_left) {
+          mask[until_node->id()] = true;
+          required_next_set[until_node->id()] = false;
         }
       }
+    }
 
-      if (valid) {
+    for (auto& next_gnba_node : gnba.nodes()) {
+      if ((next_gnba_node.state() & mask) == required_next_set) {
         current_gnba_node.successors().insert(&next_gnba_node);
       }
     }
