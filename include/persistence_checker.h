@@ -8,10 +8,17 @@
 
 class PersistenceChecker {
  public:
-  static bool Check(
-      const TransitionSystem<std::pair<size_t, GNBA<boost::dynamic_bitset<>>::TaggedState>, size_t,
-                             const GNBA<GNBA<boost::dynamic_bitset<>>::TaggedState>::Node*>& ts,
-      const GNBA<GNBA<boost::dynamic_bitset<>>::TaggedState>& nba);
+  using GNBAType = GNBA<boost::dynamic_bitset<>>;
+  using NBAState = GNBAType::TaggedState;
+  using NBAType = GNBA<NBAState>;
+  using ProductTSType = TransitionSystem<std::pair<size_t, NBAState>, size_t, const NBAType::Node*>;
+  using ProductTSNode = ProductTSType::Node;
+
+  static bool Check(const ProductTSType& ts, const NBAType& nba);
+
+ private:
+  static bool CycleCheck(const ProductTSNode* start, const ProductTSType& ts,
+                         std::unordered_set<const ProductTSNode*>& inner_visited);
 };
 
 #endif  // LTL_CHECKER_PERSISTENCE_CHECKER_H
