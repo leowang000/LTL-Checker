@@ -1,9 +1,9 @@
 #include "ts.h"
 
-// Step 1: Parser - transition system reading
-// Reads the transition system from the input stream according to the specified format.
 #include <sstream>
 
+// Step 1: Parser - transition system reading
+// Reads the transition system from the input stream according to the specified format.
 std::pair<TransitionSystem<size_t, size_t, std::string>, std::vector<std::string>>
 ReadTransitionSystemInput(std::istream& input) {
   TransitionSystem<size_t, size_t, std::string> ts;
