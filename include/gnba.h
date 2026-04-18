@@ -57,6 +57,8 @@ class GNBA {
     }
   }
 
+  // Step 3: Equivalent conversion from GNBA to NBA
+  // Converts the Generalized NBA to an equivalent Non-deterministic Buchi Automaton (NBA).
   GNBA<TaggedState> ToNBA() const {
     // Require that acceptance_sets_ is not empty.
     GNBA<TaggedState> nba;

@@ -35,6 +35,7 @@ set(SOURCES
         src/ast/ast_builder.cpp
         src/ltl_to_gnba_builder.cpp
         src/persistence_checker.cpp
+        src/product_ts_constructor.cpp
         src/ts.cpp
 )
 

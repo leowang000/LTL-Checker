@@ -123,6 +123,8 @@ std::unique_ptr<ASTNode> ASTBuilder::VisitAtomExpr(LTLParser::AtomExprContext* c
   return std::make_unique<AtomASTNode>(ctx->ATOM()->getText());
 }
 
+// Step 1: Parser - LTL formula reading
+// Reads the LTL formulas from the input stream according to the specified format.
 std::vector<std::pair<int, AST>> ReadLTLInputFile(std::istream& input) {
   std::vector<std::pair<int, AST>> ltls;
   int num_all_initial_states, num_specified_initial_states;

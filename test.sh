@@ -18,7 +18,7 @@ for i in 1 2 3 4; do
     echo "Testing benchmark $i"
 
     # Run the program and redirect output to a temporary file
-    ./build/LTL_checker $i > tmp.out
+    ./build/LTL_checker benchmark/$i.ts.in benchmark/$i.ltl.in > tmp.out
 
     # Compare with expected output
     if diff -qw tmp.out benchmark/$i.ans > /dev/null; then

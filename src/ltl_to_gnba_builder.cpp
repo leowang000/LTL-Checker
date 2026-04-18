@@ -1,8 +1,7 @@
 #include "ltl_to_gnba_builder.h"
 
-#include <unordered_map>
-#include <vector>
-
+// Step 2: Equivalent construction from LTL formula to GNBA
+// Builds a Generalized Nondeterministic Buchi Automaton (GNBA) from the given LTL AST.
 GNBA<boost::dynamic_bitset<>> LTLToGNBABuilder::Build(
     const AST& ast, const std::vector<std::string>& atomic_propositions) {
   std::vector<std::vector<size_t>> atom_ids(atomic_propositions.size());

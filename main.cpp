@@ -10,24 +10,15 @@
 #include "ts.h"
 
 int main(int argc, char* argv[]) {
-  if (argc != 2) {
-    std::cerr << "Usage: " << argv[0] << " <benchmark_prefix>" << std::endl;
+  if (argc != 3) {
+    std::cerr << "Usage: " << argv[0] << " <TS.txt> <benchmark.txt>" << std::endl;
     return 1;
   }
-  std::string prefix = argv[1];
-
-  std::string ts_file = "benchmark/" + prefix + ".ts.in";
-  std::string ltl_file = "benchmark/" + prefix + ".ltl.in";
+  std::string ts_file = argv[1];
+  std::string ltl_file = argv[2];
 
   std::ifstream ts_input_file(ts_file);
   std::ifstream ltl_input_file(ltl_file);
-
-  if (!ts_input_file.is_open()) {
-    ts_file = "../benchmark/" + prefix + ".ts.in";
-    ltl_file = "../benchmark/" + prefix + ".ltl.in";
-    ts_input_file.open(ts_file);
-    ltl_input_file.open(ltl_file);
-  }
 
   if (!ts_input_file.is_open()) {
     std::cerr << "Failed to open TS input file: " << ts_file << std::endl;

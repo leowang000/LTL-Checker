@@ -1,5 +1,7 @@
 #include "ts.h"
 
+// Step 1: Parser - transition system reading
+// Reads the transition system from the input stream according to the specified format.
 #include <sstream>
 
 std::pair<TransitionSystem<size_t, size_t, std::string>, std::vector<std::string>>

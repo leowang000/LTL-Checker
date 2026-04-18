@@ -1,12 +1,13 @@
 #include "persistence_checker.h"
 
-#include <boost/dynamic_bitset.hpp>
 #include <stack>
 #include <unordered_set>
 
 #include "gnba.h"
 #include "ts.h"
 
+// Step 5: Nested depth-first search algorithm for checking persistence property (Algorithm 8, Page 211)
+// Employs a nested DFS to find accepting cycles in the product automaton.
 bool PersistenceChecker::Check(const ProductTSType& ts, const NBAType& nba) {
   const auto& acceptance_set = nba.acceptance_sets()[0];
   std::unordered_set<const ProductTSNode*> outer_visited;
